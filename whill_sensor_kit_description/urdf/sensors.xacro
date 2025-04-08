@@ -15,18 +15,16 @@
     yaw="${calibration['base_link']['sensor_kit_base_link']['yaw']}"
   />
 
-  <!-- imu -->
-  <xacro:include filename="$(find imu_description)/urdf/imu.xacro"/>
-  <xacro:imu_macro
-    name="imu"
-    parent="base_link"
-    namespace=""
-    x="${calibration['base_link']['imu']['x']}"
-    y="${calibration['base_link']['imu']['y']}"
-    z="${calibration['base_link']['imu']['z']}"
-    roll="${calibration['base_link']['imu']['roll']}"
-    pitch="${calibration['base_link']['imu']['pitch']}"
-    yaw="${calibration['base_link']['imu']['yaw']}"
-    fps="100"
-  />
+  <!-- embedded sensors -->
+  <xacro:include filename="$(find velodyne_description)/urdf/VLP-16.urdf.xacro"/>
+  <xacro:VLP-16 parent="base_link" name="velodyne_rear" topic="velodyne_rear/velodyne_points" hz="10" samples="220" gpu="false">
+    <origin
+      xyz="${calibration['base_link']['velodyne_rear_base_link']['x']}
+           ${calibration['base_link']['velodyne_rear_base_link']['y']}
+           ${calibration['base_link']['velodyne_rear_base_link']['z']}"
+      rpy="${calibration['base_link']['velodyne_rear_base_link']['roll']}
+           ${calibration['base_link']['velodyne_rear_base_link']['pitch']}
+           ${calibration['base_link']['velodyne_rear_base_link']['yaw']}"
+    />
+  </xacro:VLP-16>
 </robot>
