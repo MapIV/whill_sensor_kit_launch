@@ -1,20 +1,25 @@
 <launch>
   <arg name="launch_driver" default="true"/>
-
+  <arg name="use_fog" default="false"/>
+  <arg name="cov_x" default="0.0"/>
+  <arg name="cov_y" default="0.0"/>
+  <arg name="cov_z" default="0.0"/>
+  <arg name="use_ros_system" default="true"/>
+  <arg name="output_imu_topic" default="imu_data" />
+  <arg name="interface" default="can0" />
+  <arg name="vehicle_id" default="default" />
+  
   <group>
     <push-ros-namespace namespace="imu"/>
-
+   
     <group>
       <push-ros-namespace namespace="tamagawa"/>
-      <node pkg="tamagawa_imu_driver" name="tag_serial_driver" exec="tag_serial_driver" if="$(var launch_driver)">
-        <remap from="imu/data_raw" to="imu_raw"/>
-        <param name="port" value="/dev/imu"/>
-        <param name="imu_frame_id" value="tamagawa/imu_link"/>
-      </node>
+      <include file="$(find-pkg-share whill_sensor_kit_launch)/launch/tamagawa_imu_can.launch">
+      </include>
     </group>
 
     <arg name="imu_raw_name" default="tamagawa/imu_raw"/>
-    <arg name="imu_corrector_param_file" default="$(find-pkg-share individual_params)/config/$(var vehicle_id)/sample_sensor_kit/imu_corrector.param.yaml"/>
+    <arg name="imu_corrector_param_file" default="$(find-pkg-share individual_params)/config/$(var vehicle_id)/whill_sensor_kit/imu_corrector.param.yaml"/>
     <include file="$(find-pkg-share autoware_imu_corrector)/launch/imu_corrector.launch.xml">
       <arg name="input_topic" value="$(var imu_raw_name)"/>
       <arg name="output_topic" value="imu_data"/>
